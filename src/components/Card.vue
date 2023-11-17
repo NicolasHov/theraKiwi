@@ -1,8 +1,11 @@
 <template>
-    <div class="card" :class="{ flipped: isFlipped, matched: isMatched }" @click="flipCard">
+    <div class="card" :class="{ flipped: isFlipped }" @click="flip">
         <div class="card-inner">
-            <div class="card-front"></div>
             <div class="card-back">{{ value }}</div>
+            <div class="card-front">
+                <img :src="imageUrl" alt="card cover" />
+            </div>
+            <div class="card-back"></div>
         </div>
     </div>
 </template>
@@ -14,14 +17,13 @@ export default defineComponent({
     props: {
         value: String,
         isFlipped: Boolean,
-        isMatched: Boolean,
+        imageUrl: String
     },
     methods: {
-        flipCard() {
-            if (!this.isFlipped) {
-                console.log(this.value);
-                this.$emit('flip', this.value);
-            }
+        flip() {
+            // if (!this.isFlipped) {
+            this.$emit('flip', this.id);
+            // }
         },
     },
 });
@@ -29,13 +31,21 @@ export default defineComponent({
   
 <style scoped>
 .card {
-    width: 100px;
-    height: 150px;
-    perspective: 1000px;
+    /* perspective: 1000px; ???*/
+
     cursor: pointer;
+    width: 200px;
+    height: 260px;
+    border: 1px solid #CCC;
+    margin: 40px 0;
+    perspective: 600px;
 }
 
+
 .card-inner {
+    line-height: 260px;
+    color: white;
+    text-align: center;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
@@ -55,7 +65,7 @@ export default defineComponent({
 }
 
 .card-front {
-    background-color: #000000;
+    transform: rotateY(180deg);
 }
 
 .card-back {

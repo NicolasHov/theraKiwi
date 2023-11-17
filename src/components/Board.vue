@@ -1,8 +1,9 @@
 <template>
     <div class="board">
-        <Card v-for="card in cards" :key="card.id" :value="card.value" :is-flipped="card.isFlipped"
-            :is-matched="card.isMatched" @flip="handleCardFlip(card)" />
+        <Card v-for="card in cards" :key="card.id" :value="card.value" :imageUrl="card.imageUrl"
+            :is-flipped="card.isFlipped" @flip="flip(card)" />
     </div>
+    <button @click="unflipCards()">Unflip cards</button>
 </template>
   
 <script lang="ts">
@@ -13,64 +14,47 @@ interface CardItem {
     id: number;
     value: string;
     isFlipped: boolean;
-    isMatched: boolean;
+    imageUrl: string
 }
 
 export default defineComponent({
     components: {
         Card,
     },
-    data() {
-        return {
-            cards: [
-                { id: 1, value: 'A', isFlipped: false, isMatched: false },
-                { id: 2, value: 'B', isFlipped: false, isMatched: false },
-                { id: 3, value: 'C', isFlipped: false, isMatched: false },
-                { id: 4, value: 'D', isFlipped: false, isMatched: false },
-                // Add more cards as needed
-            ] as CardItem[],
-            flippedCards: [] as CardItem[],
-        };
-    },
-    methods: {
-        handleCardFlip(clickedCard: CardItem) {
-            // if (this.flippedCards.length > 0) {
+    setup() {
+        const cards = ref<CardItem[]>([
+            { id: 1, value: 'A', isFlipped: false, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3YWxmE3an3J-mG-8L4Uo9oxjkQQbUOVa90DgZYwmna3ryuIDbtwek-7Q4gjqOKo21N8&usqp=CAU" },
+            { id: 2, value: 'B', isFlipped: false, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmv-j9XdV9hj6EZQ1W2SUDtqO46SlVW3oIvtxvZ0CZk1D1b0COqafOIyVsqdWuVgn0zNA&usqp=CAU" },
+            { id: 3, value: 'C', isFlipped: false, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHjl3uUmP-SeLbFFLtxrSqK8UGsL2UUfVbqVFvHbNySJv4Lnh3t8rNjZnK2khjpRj2N78&usqp=CAU" },
+            { id: 4, value: 'D', isFlipped: false, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQhxO9_irjM8QqKIfWa91qMHWm0M5_v2iQSvJGV0s6nxmtCgoNfLzwgEwKWF5_7ViuT8I&usqp=CAU" },
+            // Add more cards as needed
+        ])
+        const flippedCards = ref<CardItem[]>([])
 
-
-            // } else {
-            console.log("clickedCard: ", clickedCard);
+        const flip = (clickedCard: CardItem) => {
             // Flip the clicked card
-            clickedCard.isFlipped = true;
-            this.flippedCards.push(clickedCard);
-            // }
+            const foundCard = cards.value.find((card) => card.id === clickedCard.id);
 
-        },
-        //   checkMatch() {
-        //     const [firstCard, secondCard] = this.flippedCards;
+            if (foundCard) {
+                foundCard.isFlipped = !foundCard.isFlipped;
+                if (foundCard.isFlipped) flippedCards.value.push(foundCard)
+            }
+        }
 
-        //     if (firstCard.value === secondCard.value) {
-        //       this.markAsMatched();
-        //     } else {
-        //       this.unflipCards();
-        //     }
-        //   },
-        //   markAsMatched() {
-        //     this.flippedCards.forEach((card) => {
-        //       card.isMatched = true;
-        //     });
+        const unflipCards = () => {
+            flippedCards.value.forEach((card) => {
+                flip(card)
+            });
+            flippedCards.value = [];
+        };
 
-        //     this.flippedCards = [];
-        //   },
-        unflipCards() {
-            setTimeout(() => {
-                this.flippedCards.forEach((card) => {
-                    card.isFlipped = false;
-                });
-
-                this.flippedCards = [];
-            }, 1000);
-        },
-    },
+        return {
+            cards,
+            flippedCards,
+            flip,
+            unflipCards
+        }
+    }
 });
 </script>
   
