@@ -29,7 +29,7 @@ export default defineComponent({
             { id: 4, value: 'D', isFlipped: false, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQhxO9_irjM8QqKIfWa91qMHWm0M5_v2iQSvJGV0s6nxmtCgoNfLzwgEwKWF5_7ViuT8I&usqp=CAU" },
             // Add more cards as needed
         ])
-        const flippedCards = ref<CardItem[]>([])
+        let flippedCards = ref<CardItem[]>([])
 
         const flip = (clickedCard: CardItem) => {
             // Flip the clicked card
@@ -38,6 +38,7 @@ export default defineComponent({
             if (foundCard) {
                 foundCard.isFlipped = !foundCard.isFlipped;
                 if (foundCard.isFlipped) flippedCards.value.push(foundCard)
+                else flippedCards.value = flippedCards.value.filter(card => card.id !== foundCard.id)
             }
         }
 
